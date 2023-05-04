@@ -118,27 +118,28 @@ var_dump($_GET)
                   </tr>
                </thead>
                <tbody>
-                  <?php foreach ($hotels as $hotel): ?>
+                  <?php foreach ($hotels as $hotel):
+                     if (($park == 'null') || ($hotel['parking']) && ($vote == 'null') || ($hotel['vote'] >= (int) $vote)): ?>
 
-                     <tr>
-                        <th scope="row"> <b>.</b> </th>
-                        <td>
-                           <?= $hotel["name"] ?>
-                        </td>
-                        <td>
-                           <?= $hotel["description"] ?>
-                        </td>
-                        <td>
-                           <?= $hotel["parking"] ? 'Yes' : 'No' ?>
-                        </td>
-                        <td>
-                           <?= $hotel["vote"] ?>
-                        </td>
-                        <td>
-                           <?= $hotel["distance_to_center"] ?>
-                        </td>
-                     </tr>
-                  <?php endforeach; ?>
+                        <tr>
+                           <th scope="row"> <b>.</b> </th>
+                           <td>
+                              <?= $hotel["name"] ?>
+                           </td>
+                           <td>
+                              <?= $hotel["description"] ?>
+                           </td>
+                           <td>
+                              <?= $hotel["parking"] ? 'Yes' : 'No' ?>
+                           </td>
+                           <td>
+                              <?= $hotel["vote"] ?>
+                           </td>
+                           <td>
+                              <?= $hotel["distance_to_center"] . ' Km' ?>
+                           </td>
+                        </tr>
+                     <?php endif; endforeach; ?>
                </tbody>
             </table>
          </div>

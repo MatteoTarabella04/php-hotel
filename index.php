@@ -39,15 +39,33 @@ $hotels = [
 
 ];
 
-$park = $_GET['parking'];
-$vote = $_GET['vote'];
+$park = $_GET['filter_parking'];
 
-var_dump($_GET)
+var_dump($_GET);
+var_dump($park);
 
-   /* foreach ($hotels as $hotel) {
-   var_dump($hotel);
-   } */
-   ?>
+
+
+if (!empty($park) && !empty($_GET['filter_vote'])) {
+
+   $hotels = array_filter($hotels, function ($hotel) {
+      return $hotel['parking'] && $hotel['vote'] >= $_GET['filter_vote'];
+   });
+} elseif (!empty($park)) {
+   $hotels = array_filter($hotels, function ($hotel) {
+      return $hotel['parking'];
+   });
+} elseif (!empty($_GET['filter_vote'])) {
+   $hotels = array_filter($hotels, function ($hotel) {
+      return $hotel['vote'] >= $_GET['filter_vote'];
+   });
+}
+
+
+/* foreach ($hotels as $hotel) {
+var_dump($hotel);
+} */
+?>
 
 <!DOCTYPE html>
 <html lang='en'>
@@ -69,24 +87,23 @@ var_dump($_GET)
       <form>
          <label for="" class="form-label"> Filters </label>
          <div class="form-group my-3 w-25">
-            <select class="form-control" name="parking" id="parking">
-               <option selected value="null">Parking</option>
-               <option value="true">Yes</option>
-               <option value="false">No</option>
+            <select class="form-control" name="filter_parking" id="filter_parking">
+               <option selected value="">All</option>
+               <option value="yes">Yes</option>
+               <option value='no'>No</option>
             </select>
          </div>
          <div class="mb-3">
             <label for="Vote" class="form-label">Vote</label>
-            <select class="form-select" name="vote" id="vote">
-               <option selected value="null">Vote</option>
-               <option value="1">1</option>
-               <option value="2">2</option>
-               <option value="3">3</option>
-               <option value="4">4</option>
+            <select class="form-select" name="filter_vote" id="filter_vote">
+               <option value="">All</option>
+               <option value="2">2 +</option>
+               <option value="3">3 +</option>
+               <option value="4">4 +</option>
                <option value="5">5</option>
             </select>
          </div>
-         <button type="submit" class="btn btn-primary">Submit</button>
+         <button type="submit" class="btn btn-primary">Filter</button>
       </form>
 
       <div class="card mt-3">
@@ -118,28 +135,27 @@ var_dump($_GET)
                   </tr>
                </thead>
                <tbody>
-                  <?php foreach ($hotels as $hotel):
-                     if (($park == 'null') || ($hotel['parking']) && ($vote == 'null') || ($hotel['vote'] >= (int) $vote)): ?>
+                  <?php foreach ($hotels as $hotel): ?>
 
-                        <tr>
-                           <th scope="row"> <b>.</b> </th>
-                           <td>
-                              <?= $hotel["name"] ?>
-                           </td>
-                           <td>
-                              <?= $hotel["description"] ?>
-                           </td>
-                           <td>
-                              <?= $hotel["parking"] ? 'Yes' : 'No' ?>
-                           </td>
-                           <td>
-                              <?= $hotel["vote"] ?>
-                           </td>
-                           <td>
-                              <?= $hotel["distance_to_center"] . ' Km' ?>
-                           </td>
-                        </tr>
-                     <?php endif; endforeach; ?>
+                     <tr>
+                        <th scope="row"> <b>.</b> </th>
+                        <td>
+                           <?= $hotel["name"] ?>
+                        </td>
+                        <td>
+                           <?= $hotel["description"] ?>
+                        </td>
+                        <td>
+                           <?= $hotel["parking"] ? 'Yes' : 'No' ?>
+                        </td>
+                        <td>
+                           <?= $hotel["vote"] ?>
+                        </td>
+                        <td>
+                           <?= $hotel["distance_to_center"] . ' Km' ?>
+                        </td>
+                     </tr>
+                  <?php endforeach; ?>
                </tbody>
             </table>
          </div>
